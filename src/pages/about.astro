@@ -1,0 +1,91 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Hero from "../components/about/Hero";
+import Experience from "../components/about/Experience";
+import Skills from "../components/about/Skills";
+import { Bike, Camera, BookOpen, Brain, Film, Music } from "lucide-react";
+
+const hobbies = [
+  {
+    icon: Bike,
+    name: "Cycling",
+    description: "Exploring New York City and beyond on two wheels.",
+  },
+  {
+    icon: Camera,
+    name: "Photography",
+    description: "Capturing urban landscapes and street photography.",
+  },
+  {
+    icon: Brain,
+    name: "AI & ML",
+    description:
+      "Exploring the latest in artificial intelligence and machine learning.",
+  },
+  {
+    icon: BookOpen,
+    name: "Reading",
+    description: "Technical books, sci-fi, and personal development.",
+  },
+  {
+    icon: Film,
+    name: "Movies & TV",
+    description: "Science fiction, documentaries, and tech shows.",
+  },
+  {
+    icon: Music,
+    name: "Music",
+    description: "Electronic, ambient, and instrumental genres.",
+  },
+];
+---
+
+<MainLayout
+  title="About - Kane Montreuil"
+  description="Learn more about Kane Montreuil, a DevOps Lead and Software Engineer based in New York."
+>
+  <div class="container py-16 space-y-16">
+    <Hero client:load />
+
+    <div class="prose dark:prose-invert max-w-none">
+      <h2>A bit more about me</h2>
+      <p>
+        I'm a DevOps lead with a passion for creating efficient, scalable
+        systems and improving developer experiences. With over 9 years in
+        software engineering, I've worked across the stack but found my true
+        calling in DevOps and technical leadership.
+      </p>
+      <p>
+        Currently based in Manhattan, I lead DevOps transformation efforts at
+        NCR Voyix, where I focus on implementing automated workflows,
+        standardized environments, and metric-driven improvements.
+      </p>
+      <p>
+        When I'm not coding or automating processes, you can find me cycling
+        around the city, experimenting with photography, or diving into the
+        latest developments in AI and machine learning.
+      </p>
+    </div>
+
+    <Experience client:load />
+    <Skills client:load />
+
+    <!-- Hobbies & Interests -->
+    <section class="py-16">
+      <h2 class="text-2xl font-bold mb-8">Hobbies & Interests</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          hobbies.map(({ icon: Icon, name, description }) => (
+            <div class="card p-6 space-y-3">
+              <div class="h-12 w-12 rounded-lg bg-blue-500/10 dark:bg-blue-400/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <Icon size={24} />
+              </div>
+              <h3 class="text-xl font-semibold">{name}</h3>
+              <p class="text-gray-600 dark:text-gray-400">{description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</MainLayout>

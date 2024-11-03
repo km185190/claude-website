@@ -1,0 +1,95 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import ProjectCard from "../../components/projects/ProjectCard";
+
+// Get all projects, sort by date
+const allProjects = await getCollection("projects", ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+const sortedProjects = allProjects.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+// Get unique tags
+const allTags = [
+  ...new Set(sortedProjects.flatMap((project) => project.data.tags)),
+];
+
+// Get unique tech stack items
+const allTechStack = [
+  ...new Set(sortedProjects.flatMap((project) => project.data.stack)),
+];
+---
+
+<MainLayout
+  title="Projects - Kane Montreuil"
+  description="Explore my projects and case studies in software development, DevOps, and automation."
+>
+  <div class="container py-16">
+    <div class="max-w-2xl">
+      <h1 class="text-4xl font-bold">Projects & Case Studies</h1>
+      <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">
+        A collection of my work in software development, DevOps automation, and
+        technical leadership. Each project includes detailed information about
+        the problem, solution, and lessons learned.
+      </p>
+    </div>
+
+    {/* Filters - Can be enhanced with client-side filtering */}
+    <div class="mt-8 flex flex-wrap gap-4">
+      <div class="w-full md:w-auto">
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
+          Filter by Tag
+        </label>
+        <select class="form-select w-full md:w-48">
+          <option value="">All Tags</option>
+          {allTags.map((tag) => <option value={tag}>{tag}</option>)}
+        </select>
+      </div>
+
+      <div class="w-full md:w-auto">
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
+          Filter by Tech
+        </label>
+        <select class="form-select w-full md:w-48">
+          <option value="">All Technologies</option>
+          {allTechStack.map((tech) => <option value={tech}>{tech}</option>)}
+        </select>
+      </div>
+    </div>
+
+    {/* Featured Projects */}
+    {
+      sortedProjects.some((project) => project.data.featured) && (
+        <section class="mt-12">
+          <h2 class="text-2xl font-bold mb-6">Featured Projects</h2>
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {sortedProjects
+              .filter((project) => project.data.featured)
+              .map((project) => (
+                <ProjectCard project={project} client:load />
+              ))}
+          </div>
+        </section>
+      )
+    }
+
+    {/* All Projects */}
+    <section class="mt-12">
+      <h2 class="text-2xl font-bold mb-6">All Projects</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          sortedProjects
+            .filter((project) => !project.data.featured)
+            .map((project) => <ProjectCard project={project} client:load />)
+        }
+      </div>
+    </section>
+  </div>
+</MainLayout>

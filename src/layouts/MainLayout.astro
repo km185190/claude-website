@@ -1,0 +1,73 @@
+---
+import Navigation from "../components/Navigation";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Kane Montreuil's personal website - DevOps Lead & Software Engineer",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+
+    <title>{title}</title>
+
+    <!-- Preload fonts -->
+    <link
+      rel="preload"
+      href="https://rsms.me/inter/inter.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    </noscript>
+
+    <!-- Theme Script -->
+    <script is:inline>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+  </head>
+  <body>
+    <Navigation client:load />
+    <main class="pt-16">
+      <slot />
+    </main>
+    <footer class="mt-auto py-8 text-center text-gray-500 dark:text-gray-400">
+      <div class="container">
+        <p>
+          &copy; {new Date().getFullYear()} Kane Montreuil. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
